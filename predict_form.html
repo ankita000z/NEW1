@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict Groundwater Levels</title>
+    <style>
+        /* General Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #2196f3, #e91e63, #ffeb3b);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite, particles 10s linear infinite;
+            height: 100%;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto; /* Enable scrolling if necessary */
+        }
+
+        /* Gradient Animation */
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Main Form Container */
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.85); /* White background for the form with transparency */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(10px); /* Optional for a frosted glass effect */
+            text-align: center; /* Centers the content including the button */
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #333;
+        }
+
+        label {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            display: block;
+            color: #333;
+        }
+
+        input[type="text"], input[type="number"], button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        input[type="text"], input[type="number"] {
+            background-color: #f9f9f9;
+        }
+
+        button {
+            background-color: #2196f3;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #1e88e5;
+        }
+
+        /* Floating Particles (CSS Only) */
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 5s ease-in-out infinite;
+        }
+
+        /* Floating particles behavior */
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-300px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Particle Generator Effect */
+        .particles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Back to Home Button - Professionally Styled */
+        .back-to-home {
+            background: linear-gradient(145deg, #ff7e5f, #feb47b);
+            color: white;
+            font-size: 1.2rem;
+            padding: 12px 25px;
+            border-radius: 50px;
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            margin-top: 20px; /* Space between form and button */
+        }
+
+        .back-to-home:hover {
+            background: linear-gradient(145deg, #feb47b, #ff7e5f);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .back-to-home:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="particles-container">
+        <!-- Generate Random Floating Particles -->
+        <div class="particle" style="left: 10%; animation-duration: 8s;"></div>
+        <div class="particle" style="left: 20%; animation-duration: 6s;"></div>
+        <div class="particle" style="left: 30%; animation-duration: 7s;"></div>
+        <div class="particle" style="left: 40%; animation-duration: 5s;"></div>
+        <div class="particle" style="left: 50%; animation-duration: 9s;"></div>
+        <div class="particle" style="left: 60%; animation-duration: 6s;"></div>
+        <div class="particle" style="left: 70%; animation-duration: 8s;"></div>
+        <div class="particle" style="left: 80%; animation-duration: 7s;"></div>
+        <div class="particle" style="left: 90%; animation-duration: 5s;"></div>
+        <div class="particle" style="left: 5%; animation-duration: 7s;"></div>
+    </div>
+
+    <div class="form-container">
+        <h1>Predict Groundwater Levels</h1>
+        <form method="POST" action="/predict">
+            <label for="temperature">Temperature (°C):</label>
+            <input type="text" id="temperature" name="temperature" required><br><br>
+
+            <label for="relative_humidity">Relative Humidity:</label>
+            <input type="text" id="relative_humidity" name="relative_humidity" required><br><br>
+
+            <label for="heat_index">Heat Index:</label>
+            <input type="text" id="heat_index" name="heat_index" required><br><br>
+
+            <label for="wind_speed">Wind Speed (m/s):</label>
+            <input type="text" id="wind_speed" name="wind_speed" required><br><br>
+
+            <label for="wind_direction">Wind Direction (degrees):</label>
+            <input type="text" id="wind_direction" name="wind_direction" required><br><br>
+
+            <label for="precipitation">Precipitation (mm):</label>
+            <input type="text" id="precipitation" name="precipitation" required><br><br>
+
+            <label for="sea_level_pressure">Sea Level Pressure (hPa):</label>
+            <input type="text" id="sea_level_pressure" name="sea_level_pressure" required><br><br>
+
+            <label for="latitude">Latitude:</label>
+            <input type="text" id="latitude" name="latitude" required><br><br>
+
+            <label for="longitude">Longitude:</label>
+            <input type="text" id="longitude" name="longitude" required><br><br>
+
+            <label for="relative_humidity_percentage">Relative Humidity (%):</label>
+            <input type="text" id="relative_humidity_percentage" name="relative_humidity_percentage" required><br><br>
+
+            <label for="population_density">Population Density (per sq km):</label>
+            <input type="text" id="population_density" name="population_density" required><br><br>
+
+            <label for="recharge_coefficient">Recharge Coefficient:</label>
+            <input type="text" id="recharge_coefficient" name="recharge_coefficient" required><br><br>
+
+            <label for="recharge_rate">Recharge Rate:</label>
+            <input type="text" id="recharge_rate" name="recharge_rate" required><br><br>
+
+            <label for="abstraction_urban">Abstraction (Urban Area):</label>
+            <input type="text" id="abstraction_urban" name="abstraction_urban" required><br><br>
+
+            <label for="abstraction_green">Abstraction (Green Area):</label>
+            <input type="text" id="abstraction_green" name="abstraction_green" required><br><br>
+
+            <label for="average_abstraction">Average Abstraction:</label>
+            <input type="text" id="average_abstraction" name="average_abstraction" required><br><br>
+
+            <label for="surface_runoff">Surface Runoff:</label>
+            <input type="text" id="surface_runoff" name="surface_runoff" required><br><br>
+
+            <label for="soil_relative_erodibility">Soil Relative Erodibility:</label>
+            <input type="text" id="soil_relative_erodibility" name="soil_relative_erodibility" required><br><br>
+
+            <label for="soil_moisture">Soil Moisture (%/day):</label>
+            <input type="text" id="soil_moisture" name="soil_moisture" required><br><br>
+
+            <label for="evaporation_transpiration">Evaporation Transpiration:</label>
+            <input type="text" id="evaporation_transpiration" name="evaporation_transpiration" required><br><br>
+
+            <label for="permeability">Permeability (Darcy):</label>
+            <input type="text" id="permeability" name="permeability" required><br><br>
+
+            <label for="hydraulic_conductivity">Hydraulic Conductivity (m/s):</label>
+            <input type="text" id="hydraulic_conductivity" name="hydraulic_conductivity" required><br><br>
+
+            <label for="discharge_rate">Discharge Rate:</label>
+            <input type="text" id="discharge_rate" name="discharge_rate" required><br><br>
+
+            <button type="submit">Predict</button>
+        </form>
+
+        <a href="/" class="back-to-home">Back to Home</a>
+    </div>
+
+    <script>
+        // Generate random particles at random positions
+        function generateParticles() {
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 3 + 5) + 's';
+                document.querySelector('.particles-container').appendChild(particle);
+            }
+        }
+
+        generateParticles();
+    </script>
+</body>
+</html>

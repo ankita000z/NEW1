@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #1a1a2e;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2.8em;
+            color: #f8f9fa;
+        }
+
+        form {
+            width: 50%;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        label {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #f1faee;
+        }
+
+        select {
+            width: 90%;
+            padding: 12px;
+            font-size: 1.2em;
+            margin: 15px 0;
+            border: 2px solid #f1faee;
+            border-radius: 8px;
+            background-color: #ffffff;
+            color: #1a1a2e;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1.3em;
+            color: #ffffff;
+            background-color: #e63946;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #d62828;
+        }
+
+        .chart-description {
+            width: 70%;
+            margin: 20px auto;
+            text-align: center;
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: #e9ecef;
+        }
+
+        .chart-container {
+            width: 80%;
+            max-width: 1200px;
+            height: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <h1>Interactive Data Visualization</h1>
+
+    <!-- Form for Plot Selection -->
+    <form action="/visualize" method="POST">
+        <label for="plotType">Select a chart to visualize:</label>
+        <select name="plotType" id="plotType" required>
+            <option value="bar">Bar Chart - Predicted Groundwater Levels</option>
+            <option value="line">Line Chart - Precipitation Over Time</option>
+            <option value="scatter">Scatter Plot - Temperature vs Humidity</option>
+            <option value="radar">Radar Chart - Seasonal Averages</option>
+        </select>
+        <button type="submit">Show Chart</button>
+    </form>
+
+    <!-- Dynamic Chart Rendering -->
+    {% if plotType == 'bar' %}
+    <div class="chart-description">
+        <p><strong>Bar Chart:</strong> Visualizes predicted groundwater levels. Each bar represents a specific prediction value, enabling comparison of discrete data points.</p>
+    </div>
+    <div class="chart-container">
+        <canvas id="barChart"></canvas>
+    </div>
+    <script>
+        var predictionValues = {{ prediction_values|tojson }};
+        var ctx = document.getElementById('barChart').getContext('2d');
+        var barChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Array.from({ length: predictionValues.length }, (_, i) => 'Prediction ' + (i + 1)),
+                datasets: [{
+                    label: 'Predicted Groundwater Level',
+                    data: predictionValues,
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+        });
+    </script>
+    {% elif plotType == 'line' %}
+    <div class="chart-description">
+        <p><strong>Line Chart:</strong> Displays precipitation levels over time. Helps identify trends and patterns in time-series data.</p>
+    </div>
+    <div class="chart-container">
+        <canvas id="lineChart"></canvas>
+    </div>
+    <script>
+        var precipitationData = {{ precipitation_data|tojson }};
+        var ctx2 = document.getElementById('lineChart').getContext('2d');
+        var lineChart = new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: Array.from({ length: precipitationData.length }, (_, i) => 'Day ' + (i + 1)),
+                datasets: [{
+                    label: 'Precipitation (mm)',
+                    data: precipitationData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.3)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2,
+                    fill: true
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { x: { title: { display: true, text: 'Days' } }, y: { title: { display: true, text: 'Precipitation (mm)' } } } }
+        });
+    </script>
+    {% elif plotType == 'scatter' %}
+    <div class="chart-description">
+        <p><strong>Scatter Plot:</strong> Shows the relationship between temperature and relative humidity, useful for identifying correlations in data.</p>
+    </div>
+    <div class="chart-container">
+        <canvas id="scatterChart"></canvas>
+    </div>
+    <script>
+        var data = {{ data|tojson }};
+        var scatterData = data.map(item => ({ x: item[0], y: item[1] }));
+        var ctx3 = document.getElementById('scatterChart').getContext('2d');
+        var scatterChart = new Chart(ctx3, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Temperature vs Humidity',
+                    data: scatterData,
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { x: { title: { display: true, text: 'Temperature (°C)' } }, y: { title: { display: true, text: 'Relative Humidity (%)' } } } }
+        });
+    </script>
+    {% elif plotType == 'radar' %}
+    <div class="chart-description">
+        <p><strong>Radar Chart:</strong> Highlights seasonal averages, offering insights into data variations across seasons.</p>
+    </div>
+    <div class="chart-container">
+        <canvas id="radarChart"></canvas>
+    </div>
+    <script>
+        var seasonalData = {{ seasonal_data|tojson }};
+        var ctx4 = document.getElementById('radarChart').getContext('2d');
+        var radarChart = new Chart(ctx4, {
+            type: 'radar',
+            data: {
+                labels: ['Winter', 'Spring', 'Summer', 'Autumn'],
+                datasets: [{
+                    label: 'Seasonal Data',
+                    data: seasonalData,
+                    backgroundColor: 'rgba(153, 102, 255, 0.4)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { display: true },
+                        suggestedMin: 0,
+                        suggestedMax: Math.max(...seasonalData) + 10
+                    }
+                }
+            }
+        });
+    </script>
+    {% endif %}
+</body>
+</html>

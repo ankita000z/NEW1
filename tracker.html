@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groundwater Tracker</title>
+    <link rel="stylesheet" href="../static/styles.css">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #007BFF;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 24px;
+            position: relative;
+        }
+
+        /* Back to Home Button */
+        .back-btn {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.3s ease, transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(135deg, #feb47b, #ff7e5f);
+            transform: translateY(-5px);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main Content Section */
+        main {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            flex-grow: 1;
+            gap: 30px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            width: 95%;
+            max-width: 1000px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+        }
+
+        form label {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        form input,
+        form button {
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border 0.3s ease, background-color 0.3s ease;
+        }
+
+        form input:focus,
+        form button:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        form button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Map Section Styling */
+        #plotly-map {
+            width: 100%;
+            height: 60vh; /* Adjust to 60% of the viewport height for better responsiveness */
+            margin-top: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer Styling */
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #f1f1f1;
+            font-size: 14px;
+            color: #333;
+            margin-top: 30px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            header {
+                font-size: 22px;
+                padding: 10px;
+            }
+
+            .back-btn {
+                top: 10px;
+                left: 15px;
+                font-size: 14px;
+                padding: 8px 15px;
+            }
+
+            main {
+                padding: 20px;
+                margin: 10px auto;
+            }
+
+            form input,
+            form button {
+                font-size: 14px;
+            }
+
+            footer {
+                font-size: 12px;
+            }
+
+            #plotly-map {
+                height: 50vh; /* Adjust map size on tablets or smaller screens */
+            }
+        }
+
+        /* For smaller screens like phones */
+        @media (max-width: 480px) {
+            header {
+                font-size: 18px;
+                padding: 8px;
+            }
+
+            .back-btn {
+                top: 5px;
+                left: 10px;
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+
+            main {
+                padding: 15px;
+                margin: 5px auto;
+            }
+
+            form input,
+            form button {
+                font-size: 12px;
+            }
+
+            footer {
+                font-size: 10px;
+            }
+
+            #plotly-map {
+                height: 40vh; /* Adjust map size for mobile screens */
+            }
+        }
+    </style>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+    <!-- Back to Home Button -->
+    <a href="/" class="back-btn">Back to Home</a>
+
+    <!-- Header Section -->
+    <header>
+        <h1>Groundwater Tracker</h1>
+    </header>
+
+    <!-- Main Content Section -->
+    <main>
+        <!-- Filter Form -->
+        <form method="POST" action="/tracker">
+            <label for="state">Filter by State:</label>
+            <input type="text" id="state" name="state" placeholder="Enter state name">
+
+            <label for="village">Filter by Village:</label>
+            <input type="text" id="village" name="village" placeholder="Enter village name">
+
+            <button type="submit">Apply Filters</button>
+        </form>
+
+        <!-- Plotly Map Container -->
+        <div id="plotly-map"></div>
+    </main>
+
+    <!-- Plotly Map Script -->
+    <script>
+        var mapData = {{ map_json|safe }};
+        Plotly.newPlot('plotly-map', mapData);
+    </script>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Groundwater Insights. All rights reserved.</p>
+    </footer>
+
+</body>
+
+</html>

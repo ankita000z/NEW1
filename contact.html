@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - The Naturals</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+        .contact-header {
+            text-align: center;
+            padding: 50px;
+            background-color: #6a11cb;
+            color: white;
+        }
+        .contact-form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin: 30px auto;
+            max-width: 600px;
+        }
+        .contact-form h2 {
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #6a11cb;
+        }
+        .form-control {
+            border-radius: 25px;
+        }
+        .btn-primary {
+            background-color: #ff8c00;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #ff7000;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .flash-message {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .flash-message.success {
+            color: green;
+            font-weight: bold;
+        }
+        .back-btn {
+            margin-top: 20px;
+            display: block;
+            text-align: center;
+        }
+        .back-btn a {
+            font-size: 1.1rem;
+            text-decoration: none;
+            background-color: #6a11cb;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: background-color 0.3s ease;
+        }
+        .back-btn a:hover {
+            background-color: #5a0f9a;
+        }
+    </style>
+</head>
+<body>
+    <div class="contact-header">
+        <h1>Contact Us</h1>
+        <p>We'd love to hear from you! Please reach out with any questions or comments.</p>
+    </div>
+
+    <div class="container">
+        <!-- Flash Message -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-message {{ messages[0][0] }}">
+                    <p>{{ messages[0][1] }}</p>
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="contact-form">
+            <form action="/contact" method="POST">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Your Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="5" placeholder="Write your message here" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Send Message</button>
+            </form>
+        </div>
+
+        <!-- Back to Main Page Button -->
+        <div class="back-btn">
+            <a href="/">Back to Main Page</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
